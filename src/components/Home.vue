@@ -1,14 +1,42 @@
 <template>
   <el-container class="home">
-    <el-header class="home-header">Header</el-header>
+    <el-header class="home-header">
+      <el-row justify="space-between">
+        <el-col
+          class="txt_left"
+          :span="8"
+        >
+          <div class="grid-content bg-purple">
+            <img src="../assets/images/logo.png">
+          </div>
+        </el-col>
+        <el-col
+          class="txt_middle"
+          :span="8"
+        >
+          <div class="grid-content bg-purple title">电商后台管理系统</div>
+        </el-col>
+        <el-col
+          class="txt_right"
+          :span="8"
+        >
+          <div class="grid-content bg-purple">欢迎星耀会员<a
+              href="javascript:;"
+              class="loginout"
+              @click="logout"
+            >退出</a></div>
+        </el-col>
+      </el-row>
+    </el-header>
     <el-container>
-      <el-aside width="200px">
+      <el-aside width="205px">
         <el-row class="tac my_ul">
           <el-col
             :span="24"
             class="my_ul"
           >
             <el-menu
+              :router="true"
               default-active="2"
               class="el-menu-vertical-demo  my_ul"
               @open="handleOpen"
@@ -20,41 +48,72 @@
               <el-submenu index="1">
                 <template slot="title">
                   <i class="el-icon-location"></i>
-                  <span>导航一</span>
+                  <span>用户管理</span>
                 </template>
-                <el-menu-item-group>
-                  <template slot="title">分组一</template>
-                  <el-menu-item index="1-1">选项1</el-menu-item>
-                  <el-menu-item index="1-2">选项2</el-menu-item>
-                </el-menu-item-group>
-                <el-menu-item-group title="分组2">
-                  <el-menu-item index="1-3">选项3</el-menu-item>
-                </el-menu-item-group>
-                <el-submenu index="1-4">
-                  <template slot="title">选项4</template>
-                  <el-menu-item index="1-4-1">选项1</el-menu-item>
-                </el-submenu>
+                <el-menu-item index="/user">
+                  <i class="el-icon-menu"></i>
+                  <span slot="title">用户列表</span>
+                </el-menu-item>
               </el-submenu>
-              <el-menu-item index="2">
-                <i class="el-icon-menu"></i>
-                <span slot="title">导航二</span>
-              </el-menu-item>
-              <el-menu-item
-                index="3"
-                disabled
-              >
-                <i class="el-icon-document"></i>
-                <span slot="title">导航三</span>
-              </el-menu-item>
-              <el-menu-item index="4">
-                <i class="el-icon-setting"></i>
-                <span slot="title">导航四</span>
-              </el-menu-item>
+              <el-submenu index="2">
+                <template slot="title">
+                  <i class="el-icon-location"></i>
+                  <span>权限管理</span>
+                </template>
+                <el-menu-item index="/roles">
+                  <i class="el-icon-menu"></i>
+                  <span slot="title">角色列表</span>
+                </el-menu-item>
+                <el-menu-item index="2-2">
+                  <i class="el-icon-menu"></i>
+                  <span slot="title">权限列表</span>
+                </el-menu-item>
+              </el-submenu>
+              <el-submenu index="3">
+                <template slot="title">
+                  <i class="el-icon-location"></i>
+                  <span>商品管理</span>
+                </template>
+                <el-menu-item index="3-1">
+                  <i class="el-icon-menu"></i>
+                  <span slot="title">商品列表</span>
+                </el-menu-item>
+                <el-menu-item index="3-2">
+                  <i class="el-icon-menu"></i>
+                  <span slot="title">分类参数</span>
+                </el-menu-item>
+                <el-menu-item index="3-3">
+                  <i class="el-icon-menu"></i>
+                  <span slot="title">商品分类</span>
+                </el-menu-item>
+              </el-submenu>
+              <el-submenu index="4">
+                <template slot="title">
+                  <i class="el-icon-location"></i>
+                  <span>订单管理</span>
+                </template>
+                <el-menu-item index="4-1">
+                  <i class="el-icon-menu"></i>
+                  <span slot="title">订单列表</span>
+                </el-menu-item>
+              </el-submenu>
+              <el-submenu index="5">
+                <template slot="title">
+                  <i class="el-icon-location"></i>
+                  <span>数据统计</span>
+                </template>
+                <el-menu-item index="5-1">
+                  <i class="el-icon-menu"></i>
+                  <span slot="title">数据报表</span>
+                </el-menu-item>
+              </el-submenu>
             </el-menu>
           </el-col>
         </el-row>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main class="mainbody">
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -66,19 +125,67 @@ export default {
     },
     handleClose (key, keyPath) {
       console.log(key, keyPath)
+    },
+    logout () {
+      this.$confirm('确定退出当前账号吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '退出成功!',
+          duration: 800
+        })
+        localStorage.removeItem('token')
+        this.$router.push('/login')
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消退出',
+          duration: 1000
+        })
+      })
     }
   }
 }
 </script>
 <style scoped lang="less">
 .home {
+  .txt_left {
+    text-align: left;
+  }
+  .txt_middle {
+    text-align: center;
+  }
+  .txt_right {
+    text-align: right;
+  }
+  &-header {
+    line-height: 60px;
+  }
   background-color: #fff;
   height: 100%;
   &-header {
+    font-weight: bolder;
+    img {
+      width: 180px;
+      vertical-align: middle;
+    }
     background-color: #b3c1cd;
+    .title {
+      color: #fff;
+      font-size: 28px;
+    }
+    .loginout {
+      color: #daa520;
+    }
   }
   .my_ul {
     height: 100%;
   }
+}
+.mainbody {
+  background-color: #eaeef1;
 }
 </style>

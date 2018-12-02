@@ -13,7 +13,10 @@
       :lg="8"
       :xl="6"
     >
-      <div class="login">
+      <div
+        class="login"
+        @keyup.enter="submitForm('loginForm')"
+      >
         <el-form
           :model="loginForm"
           status-icon
@@ -115,6 +118,6 @@ export default {
 }
 .login-wrapper {
   height: 100%;
-  color: #2c3e50;
+  background-color: #2c3e50;
 }
 </style>
