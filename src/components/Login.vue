@@ -1,5 +1,4 @@
 <template>
-
   <el-row
     type="flex"
     class="row-bg login-wrapper"
@@ -57,7 +56,6 @@
   </el-row>
 </template>
 <script>
-import axios from 'axios'
 export default {
   data () {
     return {
@@ -78,30 +76,32 @@ export default {
     }
   },
   methods: {
-    submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (!valid) {
-          return
+    async submitForm (formName) {
+      try {
+        await this.$refs[formName].validate()
+        const res = await this.axios.post(
+          'login',
+          this.loginForm
+        )
+        const { meta: { status, msg } } = res.data
+        // console.log(msg)
+        if (status === 200) {
+          // console.log(res)
+          this.$message({
+            message: '登录成功',
+            type: 'success',
+            duration: 1500
+          })
+          localStorage.setItem('token', res.data.data.token)
+          this.$router.push('/home')
+        } else {
+          this.$message({
+            message: `错误：${msg}`,
+            type: 'error',
+            duration: 2000
+          })
         }
-        axios.post('http://localhost:8888/api/private/v1/login', this.loginForm).then(res => {
-          if (res.data.meta.status === 400) {
-            this.$message({
-              message: `错误：${res.data.meta.msg}`,
-              type: 'error',
-              duration: 2000
-            })
-          } else if (res.data.meta.status === 200) {
-            // console.log(res)
-            this.$message({
-              message: '登录成功',
-              type: 'success',
-              duration: 1500
-            })
-            localStorage.setItem('token', res.data.data.token)
-            this.$router.push('/home')
-          }
-        })
-      })
+      } catch (e) { }
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()

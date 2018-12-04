@@ -1,4 +1,3 @@
-import axios from 'axios'
 export default {
   data () {
     return {
@@ -28,34 +27,78 @@ export default {
         this.getUserList(page)
       }
     },
-    getUserList (pagenum = 1, txt = '') {
-      axios
-        .get('http://localhost:8888/api/private/v1/users', {
-          params: {
-            pagesize: this.pagesize,
-            pagenum,
-            query: txt
-          },
-          headers: {
-            Authorization: localStorage.getItem('token')
-          }
+    async changeState (data) {
+      console.log(data.mg_state, data.id)
+      const res = await this.axios.put(
+        `users/${data.id}/state/${data.mg_state}`
+      )
+      const {
+        meta: { msg, status }
+      } = res.data
+      if (status === 200) {
+        this.$message({
+          message: msg,
+          type: 'success',
+          duration: 800
         })
-        .then(res => {
-          // console.log(res)
-          const data = res.data.data
-          if (res.data.meta.status === 401) {
-            this.$message({
-              message: res.data.meta.msg,
-              type: 'warning',
-              duration: 1000
-            })
-            this.$router.push('/login')
-          } else {
-            // this.pagenum = data.pagenum
-            this.userlist = data.users
-            this.totalnum = data.total
-          }
+      } else {
+        this.$message({
+          message: msg,
+          type: 'error',
+          duration: 1000
         })
+      }
+    },
+    async delUser (data) {
+      const res = await this.axios.delete(`users/${data.id}`)
+      const {
+        meta: { msg, status }
+      } = res.data
+      if (status === 200) {
+        this.$message({
+          message: msg,
+          type: 'success',
+          duration: 800
+        })
+        if (this.isSearched) {
+          this.getUserList(1, this.searchTxt)
+        } else {
+          this.getUserList(1)
+        }
+      } else {
+        this.$message({
+          message: msg,
+          type: 'error',
+          duration: 1000
+        })
+      }
+    },
+    async getUserList (pagenum = 1, txt = '') {
+      const res = await this.axios.get('users', {
+        params: {
+          pagesize: this.pagesize,
+          pagenum,
+          query: txt
+        }
+      })
+      const {
+        meta: { status, msg }
+      } = res.data
+      if (status === 401) {
+        this.$message({
+          message: msg,
+          type: 'warning',
+          duration: 1000
+        })
+        this.$router.push('/login')
+      } else {
+        const {
+          data: { users, total }
+        } = res.data
+        // this.pagenum = data.pagenum
+        this.userlist = users
+        this.totalnum = total
+      }
     }
   }
 }
