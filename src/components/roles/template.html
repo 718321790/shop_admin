@@ -1,0 +1,72 @@
+<div class="root">
+  <el-row>
+    <el-col>
+      <el-breadcrumb separator-class="el-icon-arrow-right" class="home_bread">
+        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>权限管理</el-breadcrumb-item>
+        <el-breadcrumb-item>角色列表</el-breadcrumb-item>
+      </el-breadcrumb>
+    </el-col>
+  </el-row>
+  <template>
+    <el-table :data="tableData" style="width: 100%">
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline class="demo-table-expand" v-if="props.row.children.length !== 0">
+            <el-row v-for="level1 in props.row.children" :key="level1.id" class="level1">
+              <el-col :span="4">
+                <el-tag :key="level1.id" closable :disable-transitions="false" @close="handleClose(props.row.id,level1.id)">
+                  {{level1.authName}}
+                </el-tag>
+                <i class="el-icon-arrow-right
+                "></i>
+              </el-col>
+              <el-col :span="20">
+                <el-row v-for="level2 in level1.children" :key="level2.id" class="level2">
+                  <el-col :span="4">
+                    <el-tag type="success" :key="level2.id" closable :disable-transitions="false" @close="handleClose(props.row.id,level2.id)">
+                      {{level2.authName}}
+                    </el-tag>
+                    <i class="el-icon-arrow-right
+                "></i>
+                  </el-col>
+                  <el-col :span="20">
+                    <span v-for="level3 in level2.children" :key="level3.id" class="level3">
+                      <el-tag type="warning" :key="level3.id" closable :disable-transitions="false" @close="handleClose(props.row.id,level3.id)">
+                        {{level3.authName}}
+                      </el-tag>
+                    </span>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </el-form>
+          <span v-else>暂无权限
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="#" type="index" :index="indexMethod" width="60">
+      </el-table-column>
+      <el-table-column label="角色名称" prop="roleName" :span="8">
+      </el-table-column>
+      <el-table-column label="描述" prop="roleDesc" :span="12">
+      </el-table-column>
+      <el-table-column prop="handler" label="操作" width="240">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" plain icon="el-icon-edit"></el-button>
+          <el-button type="danger" size="mini" plain icon="el-icon-delete"></el-button>
+          <el-button @click="assignDialog(scope.row.id)" type="success" size="mini" plain icon="el-icon-check">分配角色</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </template>
+  <!-- 分配权限弹框 -->
+  <el-dialog title="角色授权" :visible.sync="assignDialogVisible" width="50%" :before-close="assignDialogClose">
+    <el-tree :data="roleAssignData" show-checkbox node-key="id" :default-expand-all="true" ref="tree" :props="defaultProps">
+    </el-tree>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="assignDialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="updateAssign">确 定</el-button>
+    </span>
+  </el-dialog>
+</div>

@@ -1,0 +1,44 @@
+<div class="root">
+  <el-button type="success" @click="isShowAddCategory" plain>添加分类</el-button>
+  <template>
+    <el-table :data="tableData" style="width: 100%" v-loading="loading">
+      <!-- <el-table-column prop="cat_name" label="分类名称" width="180">
+      </el-table-column> -->
+      <el-table-tree-column prop="cat_name" tree-key="cat_id" parent-key="cat_pid" :indent-size="20" level-key="cat_level"
+        label="分类名称" width="180" file-icon="icon icon-file" folder-icon="icon icon-folder"></el-table-tree-column>
+      <el-table-column label="是否有效" width="180">
+        <template slot-scope="scope">
+          <span v-if="scope.row.cat_deleted === false">false</span>
+          <span v-else>true</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="cat_level" label="排序">
+      </el-table-column>
+      <el-table-column prop="handler" label="操作" width="240">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" plain icon="el-icon-edit"></el-button>
+          <el-button type="danger" size="mini" plain icon="el-icon-delete"></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </template>
+  <el-pagination background layout="prev, pager, next" :total="total" @current-change="pageChange" :page-size="pagesize"></el-pagination>
+
+  <!-- 添加分类框 -->
+  <el-dialog title="添加分类" :visible.sync="addCategoriesDialog">
+    <el-form :model="categoriesData" ref="categoriesData" label-width="80px" status-icon>
+      <el-form-item label="分类名称" prop="cat_name">
+        <el-input v-model="categoriesData.cat_name"></el-input>
+      </el-form-item>
+      <el-form-item label="父级名称" label-width="80px">
+        <!-- <el-select v-model="categoriesData.rid" placeholder="请选择">
+          </el-select> -->
+        <el-cascader :options="options" v-model="categoriesData.cat_pid" change-on-select :props="propsObj"></el-cascader>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="addCategoriesDialog = false">取 消</el-button>
+      <el-button type="primary" @click="addCategory">确 定</el-button>
+    </div>
+  </el-dialog>
+</div>

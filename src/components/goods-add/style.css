@@ -1,0 +1,11 @@
+.el-upload-list {
+  min-height: 100px;
+  margin-bottom: 15px;
+}
+.quill-editor {
+  background-color: #fff;
+  margin-bottom: 15px;
+}
+.ql-container {
+  min-height: 200px;
+}

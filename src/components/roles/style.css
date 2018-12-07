@@ -1,0 +1,19 @@
+.home_bread {
+  font-size: 16px;
+  line-height: 3em;
+  background-color: #d4dae0;
+  padding-left: 10px;
+}
+.level1:not(:last-child) {
+  border-bottom: 1px dotted #ccc;
+  margin-bottom: 10px;
+  padding: 5px 0;
+}
+.level2 {
+  margin-bottom: 10px;
+}
+.level3 {
+  display: inline-block;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
