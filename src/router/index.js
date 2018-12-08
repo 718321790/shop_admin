@@ -1,13 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/Home'
 import Login from '@/components/Login'
-import User from '@/components/user/User'
-import Roles from '@/components/roles/Roles'
-import Rights from '@/components/rights/Rights'
-import Categories from '@/components/categories/Categories'
-import Goods from '@/components/goods/Goods'
-import GoodsAdd from '@/components/goods-add/GoodsAdd'
+const NotFound = () => import('@/components/notFound/NotFound')
+const GoodsAdd = () =>
+  import(/* webpackChunkName:'goods' */ '@/components/goods-add/GoodsAdd')
+const Goods = () =>
+  import(/* webpackChunkName:'goods' */ '@/components/goods/Goods')
+const Categories = () => import('@/components/categories/Categories')
+const Rights = () => import('@/components/rights/Rights')
+const Roles = () => import('@/components/roles/Roles')
+const User = () => import('@/components/user/User')
+const Home = () => import('@/components/Home')
 
 Vue.use(Router)
 
@@ -34,6 +37,11 @@ const router = new Router({
       path: '/Login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '*',
+      name: 'NotFound',
+      component: NotFound
     }
   ]
 })

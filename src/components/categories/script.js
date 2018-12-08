@@ -1,4 +1,8 @@
+import ElTreeGrid from 'element-tree-grid'
 export default {
+  components: {
+    [ElTreeGrid.name]: ElTreeGrid
+  },
   data () {
     return {
       total: 0,

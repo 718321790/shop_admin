@@ -37,7 +37,7 @@
           >
             <el-menu
               :router="true"
-              default-active="2"
+              :default-active="$route.path.split('/').length === 2 ? $route.path: ('/'+$route.path.split('/')[1])"
               class="el-menu-vertical-demo  my_ul"
               @open="handleOpen"
               @close="handleClose"
